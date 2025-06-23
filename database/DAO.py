@@ -1,54 +1,26 @@
 from database.DB_connect import DBConnect
-from model.state import State
 from model.sighting import Sighting
+from model.state import State
 
 
-class DAO():
-    def __init__(self):
+class DAO:
+
+
+    @staticmethod
+    def getAnni():
+        conn = DBConnect.get_connection()
+        cursor = conn.cursor(dictionary = True)
+        result = []
+        query = """ SELECT distinct YEAR(s.datetime)
+                    FROM sighting s
+                    order by YEAR(s.datetime) desc"""
+        cursor.execute(query)
+        for row in cursor:
+            result.append(row["YEAR(s.datetime)"])
+        cursor.close()
+        conn.close()
+        return result
+
+    @staticmethod
+    def getShape(anno):
         pass
-
-    @staticmethod
-    def get_all_states():
-        cnx = DBConnect.get_connection()
-        result = []
-        if cnx is None:
-            print("Connessione fallita")
-        else:
-            cursor = cnx.cursor(dictionary=True)
-            query = """select * 
-                    from state s"""
-            cursor.execute(query)
-
-            for row in cursor:
-                result.append(
-                    State(row["id"],
-                          row["Name"],
-                          row["Capital"],
-                          row["Lat"],
-                          row["Lng"],
-                          row["Area"],
-                          row["Population"],
-                          row["Neighbors"]))
-
-            cursor.close()
-            cnx.close()
-        return result
-
-    @staticmethod
-    def get_all_sightings():
-        cnx = DBConnect.get_connection()
-        result = []
-        if cnx is None:
-            print("Connessione fallita")
-        else:
-            cursor = cnx.cursor(dictionary=True)
-            query = """select * 
-                    from sighting s 
-                    order by `datetime` asc """
-            cursor.execute(query)
-
-            for row in cursor:
-                result.append(Sighting(**row))
-            cursor.close()
-            cnx.close()
-        return result
