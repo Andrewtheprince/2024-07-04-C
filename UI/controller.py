@@ -23,7 +23,16 @@ class Controller:
         self._view.update_page()
 
     def handle_graph(self, e):
-        pass
+        self._model.buildGraph(self._annoScelto, self._formaScelta)
+        n,a = self._model.getGraphDetails()
+        self._view.txt_result1.clean()
+        self._view.txt_result1.controls.append(ft.Text(f"Numero di vertici: {n}"))
+        self._view.txt_result1.controls.append(ft.Text(f"Numero di archi: {a}"))
+        self._view.txt_result1.controls.append(ft.Text("I 5 archi di peso maggiore sono:"))
+        archiPesoMax = self._model.archiPesoMaggiore()
+        for arcoMax in archiPesoMax:
+            self._view.txt_result1.controls.append(ft.Text(arcoMax))
+        self._view.update_page()
 
     def handle_path(self, e):
         pass
