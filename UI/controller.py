@@ -5,6 +5,7 @@ from model.modello import Model
 
 class Controller:
     def __init__(self, view: View, model: Model):
+        self._formaScelta = None
         self._view = view
         self._model = model
         self._annoScelto = None
@@ -17,6 +18,9 @@ class Controller:
 
     def fillShape(self, e):
         shape = self._model.getShape(self._annoScelto)
+        for forma in shape:
+            self._view.ddshape.options.append(ft.dropdown.Option(key=forma, data = forma, on_click=self._sceltaForma))
+        self._view.update_page()
 
     def handle_graph(self, e):
         pass
@@ -27,3 +31,7 @@ class Controller:
     def _sceltaAnno(self, e):
         self._annoScelto = e.control.data
         print(f"selezionato {self._annoScelto}")
+
+    def _sceltaForma(self, e):
+        self._formaScelta = e.control.data
+        print(f"selezionata {self._formaScelta}")

@@ -23,4 +23,16 @@ class DAO:
 
     @staticmethod
     def getShape(anno):
-        pass
+        conn = DBConnect.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        result = []
+        query = """ SELECT distinctrow s.shape
+                    FROM sighting s
+                    where s.shape is not NULL and YEAR(s.datetime) = %s
+                    order by s.shape asc"""
+        cursor.execute(query, (anno,))
+        for row in cursor:
+            result.append(row["shape"])
+        cursor.close()
+        conn.close()
+        return result
